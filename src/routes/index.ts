@@ -1,4 +1,5 @@
 export { default as auth } from './auth'
+export { default as siswa } from './siswa'
 // export { default as services } from './services'
 // export { default as profile } from './profile'
 // export { default as orders } from './orders'

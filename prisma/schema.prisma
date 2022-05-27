@@ -14,10 +14,33 @@ model Pengguna {
   id            String    @id @default(uuid())
   username      String
   password      String
+  Siswa         Siswa[]
 }
 
 model Admin {
   id            String    @id @default(uuid())
   username      String
   password      String
+}
+
+model Siswa {
+  id              String      @id @default(uuid())
+  username        String
+  nama            String
+  alamat          String
+  jenis_kelamin   String
+  tempat_lahir    String
+  tanggal_lahir   String
+  agama           String
+  no_tlp          String
+  email           String   @unique
+  kewarganegaraan String
+  kecamatan       String
+  kabupaten       String
+  nama_ibu        String
+  pekerjaan_ibu   String
+  pengguna        Pengguna  @relation(fields: [penggunaId], references: [id])
+  penggunaId      String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

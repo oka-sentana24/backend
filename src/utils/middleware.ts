@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { HttpError } from 'http-errors'
-
 import { throwError } from '@/utils/global'
 import { Role } from '@/types/enums'
 

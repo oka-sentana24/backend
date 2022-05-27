@@ -6,7 +6,7 @@ import cors from 'cors'
 import { getUser } from '@/utils/global'
 import { corsOptions } from '@/config/cors'
 import { errorHandler } from './utils/middleware'
-import { auth } from '@/routes'
+import { auth, siswa } from '@/routes'
 
 const prisma = new PrismaClient()
 const app = express()
@@ -28,6 +28,7 @@ const middleware = (req: Request, res: Response, next: NextFunction) => {
 app.use(middleware)
 
 app.use('/', auth)
+app.use('/siswa', siswa)
 
 app.use(errorHandler)
 
