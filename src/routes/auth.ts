@@ -1,14 +1,8 @@
 import { Router } from 'express'
-
-import { getMe } from '@/resolvers/queries'
-import { signin, customerSignup, serviceSignup } from '@/resolvers/mutations'
+import penggunaSignup from '@/controllers/auth/penggunaSignup'
 
 const router = Router()
 
-router
-  .get('/me', getMe)
-  .post('/signin', signin)
-  .post('/signup/customer', customerSignup)
-  .post('/signup/service', serviceSignup)
+router.post('/signup/pengguna', penggunaSignup)
 
 export default router

@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import { StatusCodes } from 'http-status-codes'
 import createError, { HttpError } from 'http-errors'
 
-import { Customer, Service } from '.prisma/client'
+import { Pengguna, Admin } from '.prisma/client'
 import { Role } from '@/types/enums'
 
 export const getUser = (headerToken?: string) => {
@@ -21,7 +21,7 @@ export const throwError = (
   message?: string
 ): HttpError => (message ? createError(status, message) : createError(status))
 
-export const getRole = (service: Service, customer: Customer): Role => {
-  if (!service && !customer) throw new Error('UnknownRoleError')
-  return !!service ? Role.SERVICE : Role.CUSTOMER
+export const getRole = (admin: Admin, pengguna: Pengguna): Role => {
+  if (!admin && !pengguna) throw new Error('UnknownRoleError')
+  return !!admin ? Role.ADMIN : Role.PENGGUNA
 }

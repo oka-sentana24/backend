@@ -17,14 +17,14 @@ export const auth = (_: Request, res: Response, next: NextFunction) => {
   next()
 }
 
-export const customer = (_: Request, res: Response, next: NextFunction) => {
-  if (res?.locals?.user?.role !== Role.CUSTOMER)
+export const pengguna = (_: Request, res: Response, next: NextFunction) => {
+  if (res?.locals?.user?.role !== Role.PENGGUNA)
     return next(throwError(StatusCodes.FORBIDDEN))
   next()
 }
 
-export const service = (_: Request, res: Response, next: NextFunction) => {
-  if (res?.locals?.user?.role !== Role.SERVICE)
+export const admin = (_: Request, res: Response, next: NextFunction) => {
+  if (res?.locals?.user?.role !== Role.ADMIN)
     return next(throwError(StatusCodes.FORBIDDEN))
   next()
 }
