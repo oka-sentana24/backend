@@ -1,10 +1,71 @@
+// import { NextFunction, Request, Response } from 'express'
+// import { StatusCodes } from 'http-status-codes'
+// import { getPassword, getToken } from '@/utils/auth'
+// import { User } from '@/types/global'
+// import { Role } from '@/types/enums'
+// import { Siswa, Pengguna } from '.prisma/client'
+// import { throwError } from '@/utils/global'
+
+// type Body = {
+//   id: string
+//   username: string
+//   password: string
+//   nama: string
+//   alamat: string
+//   jenis_kelamin: string
+//   tempat_lahir: string
+//   tanggal_lahir: string
+//   agama: string
+//   no_tlp: string
+//   email: string
+//   kewarganegaraan: string
+//   kecamatan: string
+//   kabupaten: string
+//   nama_ibu: string
+//   pekerjaan_ibu: string
+// }
+
+// export default async (req: Request, res: Response, next: NextFunction) => {
+//   const { id, username, password, ...data } = req.body as Body
+//   const hashedPassword = await getPassword(username)
+//   try {
+//     await res.locals.prisma.siswa
+//       .create({
+//         data: {
+//           username,
+//           ...data,
+//           create: {
+//             pengguna: {
+//               username: username,
+//               password: hashedPassword,
+//             },
+//           },
+//         },
+//       })
+//       .then(
+//         (siswa: Siswa) => res.status(StatusCodes.CREATED).json(siswa),
+//         (pengguna: Pengguna) => {
+//           const user: User = {
+//             ...pengguna,
+//             role: Role.PENGGUNA,
+//           }
+//           const token: string = getToken(user)
+//           res.status(StatusCodes.CREATED).json({ user, token })
+//         }
+//       )
+//   } catch (error) {
+//     console.log(error)
+//     return res.status(404).send({ error: 'cannot create siswa' })
+//   }
+// }
+
 import { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
+import { Pengguna, Siswa } from '.prisma/client'
 import { getPassword, getToken } from '@/utils/auth'
+import { throwError } from '@/utils/global'
 import { User } from '@/types/global'
 import { Role } from '@/types/enums'
-import { Siswa, Pengguna } from '.prisma/client'
-import { throwError } from '@/utils/global'
 
 type Body = {
   id: string
@@ -26,46 +87,49 @@ type Body = {
 }
 
 export default async (req: Request, res: Response, next: NextFunction) => {
-  const { id, username, password, ...data } = req.body as Body
+  const { password, username, ...data } = req.body as Body
+
   const hashedPassword = await getPassword(username)
+
   await res.locals.prisma.siswa
     .create({
       data: {
         username,
         ...data,
-        create: {
-          pengguna: {
+        pengguna: {
+          create: {
             username: username,
             password: hashedPassword,
           },
         },
-        // Pengguna: {
-        //   create: {
-        //     username: username,
-        //     password: hashedPassword,
-        //   },
-        // },
+      },
+      select: {
+        username: true,
+        nama: true,
+        alamat: true,
+        jenis_kelamin: true,
+        tempat_lahir: true,
+        tanggal_lahir: true,
+        agama: true,
+        no_tlp: true,
+        email: true,
+        kewarganegaraan: true,
+        kecamatan: true,
+        kabupaten: true,
+        nama_ibu: true,
+        pekerjaan_ibu: true,
       },
     })
     .then(
-      (siswa: Siswa) =>
-        res
-          .status(StatusCodes.CREATED)
-          .setHeader('Content-Type', 'application/json')
-          .json(siswa),
+      (siswa: Siswa) => res.status(StatusCodes.CREATED).json(siswa),
       (pengguna: Pengguna) => {
         const user: User = {
           ...pengguna,
           role: Role.PENGGUNA,
         }
-
         const token: string = getToken(user)
-
         res.status(StatusCodes.CREATED).json({ user, token })
       }
     )
-    .catch(
-      () => res.status(StatusCodes.BAD_REQUEST).json(null),
-      next(throwError(StatusCodes.BAD_REQUEST))
-    )
+    .catch(() => next(throwError(StatusCodes.BAD_REQUEST)))
 }
