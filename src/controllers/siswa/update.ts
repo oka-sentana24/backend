@@ -5,6 +5,8 @@ import { Siswa } from '.prisma/client'
 
 type Params = {
   id: string
+}
+type Body = {
   username: string
   password: string
   nama: string
@@ -26,9 +28,13 @@ type Params = {
 
 export default async (req: Request, res: Response) => {
   const { id } = req.params as Params
+  const { ...data } = req.body as Body
 
-  const siswa: Siswa = await res.locals.prisma.siswa.findMany({
+  const siswa: Siswa = await res.locals.prisma.siswa.update({
     where: { id },
+    data: {
+      ...data,
+    },
     select: {
       id: true,
       username: true,

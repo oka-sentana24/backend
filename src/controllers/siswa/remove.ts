@@ -27,7 +27,7 @@ type Params = {
 export default async (req: Request, res: Response) => {
   const { id } = req.params as Params
 
-  const siswa: Siswa = await res.locals.prisma.siswa.findMany({
+  const siswa: Siswa = await res.locals.prisma.siswa.delete({
     where: { id },
     select: {
       id: true,
