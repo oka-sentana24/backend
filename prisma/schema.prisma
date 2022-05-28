@@ -11,20 +11,22 @@ datasource db {
 }
 
 model Pengguna {
-  id            String    @id @default(uuid())
-  username      String
-  password      String
-  Siswa         Siswa[]
+  id       String  @id @default(uuid())
+  username String
+  password String
+  Siswa    Siswa[]
+  Kelas    Kelas?  @relation(fields: [kelasId], references: [id])
+  kelasId  String?
 }
 
 model Admin {
-  id            String    @id @default(uuid())
-  username      String
-  password      String
+  id       String @id @default(uuid())
+  username String
+  password String
 }
 
 model Siswa {
-  id              String      @id @default(uuid())
+  id              String    @id @default(uuid())
   username        String
   nama            String
   alamat          String
@@ -33,14 +35,24 @@ model Siswa {
   tanggal_lahir   String
   agama           String
   no_tlp          String
-  email           String   @unique
+  email           String    @unique
   kewarganegaraan String
   kecamatan       String
   kabupaten       String
   nama_ibu        String
   pekerjaan_ibu   String
-  pengguna        Pengguna?  @relation(fields: [penggunaId], references: [id])
+  pengguna        Pengguna? @relation(fields: [penggunaId], references: [id])
   penggunaId      String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  kelas           Kelas?    @relation(fields: [kelasId], references: [id])
+  kelasId         String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Kelas {
+  id    String     @id @default(uuid())
+  nama  String
+  grade String
+  siswa Pengguna[]
+  Siswa Siswa[]
 }

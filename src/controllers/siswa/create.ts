@@ -61,11 +61,12 @@
 
 import { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { Pengguna, Siswa } from '.prisma/client'
+import { Pengguna, Siswa, Kelas } from '.prisma/client'
 import { getPassword, getToken } from '@/utils/auth'
 import { throwError } from '@/utils/global'
 import { User } from '@/types/global'
 import { Role } from '@/types/enums'
+import { kelas } from '@/routes'
 
 type Body = {
   id: string
@@ -84,22 +85,35 @@ type Body = {
   kabupaten: string
   nama_ibu: string
   pekerjaan_ibu: string
+  kelasId: string
 }
 
 export default async (req: Request, res: Response, next: NextFunction) => {
-  const { password, username, ...data } = req.body as Body
+  const { id, password, username, kelasId, ...data } = req.body as Body
 
   const hashedPassword = await getPassword(username)
+
+  await res.locals.prisma.kelas.findFirst({
+    where: {
+      id: kelasId,
+    },
+  })
 
   await res.locals.prisma.siswa
     .create({
       data: {
         username,
         ...data,
+        kelasId: id,
         pengguna: {
           create: {
             username: username,
             password: hashedPassword,
+          },
+        },
+        kelas: {
+          connect: {
+            id: kelasId,
           },
         },
       },
@@ -122,6 +136,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     })
     .then(
       (siswa: Siswa) => res.status(StatusCodes.CREATED).json(siswa),
+      (kelas: Kelas) => res.status(StatusCodes.CREATED).json(kelas),
       (pengguna: Pengguna) => {
         const user: User = {
           ...pengguna,
