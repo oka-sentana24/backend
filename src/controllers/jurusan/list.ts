@@ -1,39 +1,19 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 
-import { Siswa } from '.prisma/client'
+import { Jurusan } from '.prisma/client'
 
 type Params = {
   id: string
-  username: string
-  password: string
-  nama: string
-  alamat: string
-  jenis_kelamin: string
-  tempat_lahir: string
-  tanggal_lahir: string
-  agama: string
-  no_tlp: string
-  email: string
-  kewarganegaraan: string
-  kecamatan: string
-  kabupaten: string
-  nama_ibu: string
-  pekerjaan_ibu: string
-  kelasId: string
-  jurusanId: string
+  
 }
 
 export default async (req: Request, res: Response) => {
   const { id } = req.params as Params
 
-  const siswa: Siswa = await res.locals.prisma.siswa.findMany({
+  const jurusan: Jurusan = await res.locals.prisma.jurusan.findMany({
     where: { id },
 
-    include:{
-      kelas: true,
-      jurusan:true
-    }
     // select: {
     //   id: true,
     //   username: true,
@@ -55,5 +35,5 @@ export default async (req: Request, res: Response) => {
     // },
   })
 
-  res.status(StatusCodes.OK).json(siswa)
+  res.status(StatusCodes.OK).json(jurusan)
 }

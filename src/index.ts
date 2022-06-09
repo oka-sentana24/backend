@@ -16,7 +16,7 @@ app.disable('x-powered-by')
 app.set('trust proxy', 1)
 
 app.use(express.json())
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(helmet())
 
 const middleware = (req: Request, res: Response, next: NextFunction) => {

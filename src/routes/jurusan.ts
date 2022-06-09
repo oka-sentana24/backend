@@ -1,9 +1,13 @@
 import { Router } from 'express'
 import { admin, auth } from '@/utils/middleware'
-import { create } from '@/controllers/jurusan'
+import { create, list, detail, update } from '@/controllers/jurusan'
 
 const router = Router()
 
-router.post('/', [auth, admin], create)
+router
+.post('/', create)
+.get('/list', list)
+.get('/list/:id', detail)
+.put('/update/:id', update)
 
 export default router

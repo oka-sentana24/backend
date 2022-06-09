@@ -1,6 +1,10 @@
 import { Router } from 'express'
 import { admin, auth } from '@/utils/middleware'
-import { create, list, detail, update, remove } from '@/controllers/siswa'
+import create from '@/controllers/siswa/create'
+import list from '@/controllers/siswa/list'
+import detail from '@/controllers/siswa/detail'
+import update from '@/controllers/siswa/update'
+import remove from '@/controllers/siswa/remove'
 
 const router = Router()
 
